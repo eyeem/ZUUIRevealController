@@ -533,8 +533,8 @@
 			}
 			completion:^(BOOL finished)
 			{
-				[self revealToggle:self];
-				  
+//				[self revealToggle:self];
+
 				if ([self.delegate respondsToSelector:@selector(revealController:didSwapToFrontViewController:)])
 				{
 					[self.delegate revealController:self didSwapToFrontViewController:newFrontViewController];
@@ -565,7 +565,7 @@
 			[self.delegate revealController:self didSwapToFrontViewController:newFrontViewController];
 		}
 		
-		[self revealToggle:self];
+//		[self revealToggle:self];
 	}
 }
 
@@ -580,7 +580,7 @@
 {
 	if (nil != frontViewController && _frontViewController == frontViewController)
 	{
-		[self revealToggle:self];
+//		[self revealToggle:self];
 	}
 	else if (nil != frontViewController)
 	{
