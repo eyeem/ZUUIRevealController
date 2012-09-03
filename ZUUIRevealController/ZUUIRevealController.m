@@ -531,7 +531,7 @@
 				CGRect offsetRect = CGRectMake(0.0f, 0.0f, self.frontView.frame.size.width, self.frontView.frame.size.height);
 				self.frontView.frame = offsetRect;
 			}
-			completion:^(BOOL finished)
+			completion:^(BOOL finished2)
 			{
 //				[self revealToggle:self];
 
