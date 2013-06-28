@@ -109,7 +109,7 @@
 	self.revealViewTriggerWidth = 125.0f;
 	self.concealViewTriggerWidth = 200.0f;
 	self.quickFlickVelocity = 1300.0f;
-	self.toggleAnimationDuration = 0.25f;
+	self.toggleAnimationDuration = 0.3f;
 	self.frontViewShadowRadius = 2.5f;
 }
 
@@ -198,6 +198,15 @@
 			[self.delegate revealController:self didRevealRearViewController:self.rearViewController];
 		}
 	}];
+	
+	double delayInSeconds = 0.0;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+	dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+		[UIView animateWithDuration:duration - 0.025 delay:0.0f options:UIViewAnimationOptionCurveLinear|UIViewAnimationOptionBeginFromCurrentState animations:^
+		 {
+			 self.rearView.frame = CGRectMake(0.0, 0.0f, self.rearView.frame.size.width, self.rearView.frame.size.height);
+		 } completion:nil];
+	});
 }
 
 - (void)_concealAnimationWithDuration:(NSTimeInterval)duration resigningCompletelyFromRearViewPresentationMode:(BOOL)resigning
@@ -205,6 +214,7 @@
 	[UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction animations:^
 	{
 		self.frontView.frame = CGRectMake(0.0f, 0.0f, self.frontView.frame.size.width, self.frontView.frame.size.height);
+		self.rearView.frame = CGRectMake(-100.0f, 0.0f, self.rearView.frame.size.width, self.rearView.frame.size.height);
 	}
 	completion:^(BOOL finished)
 	{
@@ -398,6 +408,8 @@
 		{
 			float offset = [self _calculateOffsetForTranslationInView:[recognizer translationInView:self.view].x];
 			self.frontView.frame = CGRectMake(offset, 0.0f, self.frontView.frame.size.width, self.frontView.frame.size.height);
+			self.rearView.frame = CGRectMake(-100.0 + offset/4, 0.0f, self.rearView.frame.size.width, self.rearView.frame.size.height);
+
 		}
 	}
 	else
@@ -406,10 +418,18 @@
 		{
 			float offset = [self _calculateOffsetForTranslationInView:([recognizer translationInView:self.view].x+self.rearViewRevealWidth)];
 			self.frontView.frame = CGRectMake(offset, 0.0f, self.frontView.frame.size.width, self.frontView.frame.size.height);
+			
+			if (self.frontView.frame.origin.x + self.maxRearViewRevealOverdraw < self.view.bounds.size.width) {
+				self.rearView.frame = CGRectMake(-100.0 + offset/4, 0.0f, self.rearView.frame.size.width, self.rearView.frame.size.height);
+			}
+			
+
 		}
 		else if ([recognizer translationInView:self.view].x > -self.rearViewRevealWidth)
 		{
 			self.frontView.frame = CGRectMake([recognizer translationInView:self.view].x+self.rearViewRevealWidth, 0.0f, self.frontView.frame.size.width, self.frontView.frame.size.height);
+					
+			self.rearView.frame = CGRectMake([recognizer translationInView:self.view].x/4, 0.0f, self.frontView.frame.size.width, self.frontView.frame.size.height);
 		}
 		else
 		{
