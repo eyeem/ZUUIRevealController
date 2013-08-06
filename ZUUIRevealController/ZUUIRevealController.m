@@ -764,14 +764,6 @@
 	[self _addFrontViewControllerToHierarchy:self.frontViewController];	
 }
 
-- (void)viewDidUnload
-{
-	[self _removeViewControllerFromHierarchy:self.frontViewController];
-	[self _removeViewControllerFromHierarchy:self.rearViewController];
-	
-	self.frontView = nil;
-	self.rearView = nil;
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
